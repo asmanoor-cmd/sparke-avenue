@@ -351,7 +351,7 @@ export default function Home() {
               </div>
               <div>
                 <b>Call / WhatsApp</b>
-                <a href="https://wa.me/923000000000" target="_blank" rel="noreferrer">+92 (300) 000-0000</a>
+                <a href="https://wa.me/923144083350" target="_blank" rel="noreferrer">+92 (314) 4083350</a>
               </div>
             </div>
 
