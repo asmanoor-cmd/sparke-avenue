@@ -259,5 +259,5 @@ If environment variables are required in the future, store them in a `.env.local
 
 ## License
 
-This project is developed for Spark Avenue.
+This project is developed for Sparke Avenue.
 
