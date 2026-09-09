@@ -203,7 +203,7 @@ export default function WebDevelopmentPage() {
         <p style={{ color: "var(--muted)", maxWidth: 560, margin: "0 auto 40px" }}>
           Have a website idea? Tell us what you need and our team will help turn it into reality.
         </p>
-        <InquiryForm extraLabel="Project Type" extraPlaceholder="Project Type (e.g. Business Website, E-Commerce)" />
+        <InquiryForm serviceName="Web Development" extraLabel="Project Type" extraPlaceholder="Project Type (e.g. Business Website, E-Commerce)" />
       </section>
 
       <SiteFooter />

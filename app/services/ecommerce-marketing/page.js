@@ -206,7 +206,7 @@ export default function EcommerceMarketingPage() {
         <p style={{ color: "var(--muted)", maxWidth: 560, margin: "0 auto 40px" }}>
           Tell us about your store and your goals, and let&apos;s create a growth strategy.
         </p>
-        <InquiryForm extraLabel="Store / Website" extraPlaceholder="Your Store or Website URL" />
+        <InquiryForm serviceName="E-Commerce Marketing" extraLabel="Store / Website" extraPlaceholder="Your Store or Website URL" />
       </section>
 
       <SiteFooter />

@@ -204,7 +204,7 @@ export default function SeoServicesPage() {
         <p style={{ color: "var(--muted)", maxWidth: 560, margin: "0 auto 40px" }}>
           Tell us about your business and let&apos;s create an SEO strategy built around your goals.
         </p>
-        <InquiryForm extraLabel="Website" extraPlaceholder="Your Website URL" />
+        <InquiryForm serviceName="SEO Services" extraLabel="Website" extraPlaceholder="Your Website URL" />
       </section>
 
       <SiteFooter />

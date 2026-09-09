@@ -224,7 +224,7 @@ export default function SocialMediaMarketingPage() {
       <section className="final-cta reveal">
         <span className="eyebrow" style={{ justifyContent: "center" }}>Let&apos;s Talk</span>
         <h2>Your audience is already scrolling. Let&apos;s give them something to stop for.</h2>
-        <InquiryForm extraLabel="Business / Brand" extraPlaceholder="Business / Brand Name" />
+        <InquiryForm serviceName="Social Media Marketing" extraLabel="Business / Brand" extraPlaceholder="Business / Brand Name" />
       </section>
 
       <SiteFooter />

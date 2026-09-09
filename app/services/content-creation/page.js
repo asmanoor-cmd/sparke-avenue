@@ -208,7 +208,7 @@ export default function ContentCreationPage() {
       <section className="final-cta reveal">
         <span className="eyebrow" style={{ justifyContent: "center" }}>Let&apos;s Talk</span>
         <h2>Have an idea? Let&apos;s turn it into content.</h2>
-        <InquiryForm extraLabel="Content Type" extraPlaceholder="Content Type (e.g. Reels, Copywriting)" />
+        <InquiryForm serviceName="Content Creation" extraLabel="Content Type" extraPlaceholder="Content Type (e.g. Reels, Copywriting)" />
       </section>
 
       <SiteFooter />

@@ -3,6 +3,7 @@ import ServicePage from "../../components/ServicePage";
 export default function Page() {
   return (
     <ServicePage
+      serviceName="Performance Marketing"
       eyebrow="Performance Marketing"
       headline="Ads that don't just get clicks."
       accentWord="They get results."

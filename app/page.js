@@ -7,6 +7,8 @@ import SiteFooter from "./components/SiteFooter";
 import AmbientBackground from "./components/AmbientBackground";
 import BrandModal, { BRANDS_DATA } from "./components/BrandModal";
 import Icon from "./components/Icon";
+import { WHATSAPP_CONFIG } from "./config/whatsapp.js";
+import { handleWhatsAppSubmit, sanitizeInput } from "./utils/whatsapp.js";
 
 const SERVICES = [
   { tag: "ADS", title: "Performance Marketing", desc: "Targeted Meta & Google Ads campaigns designed to generate qualified leads, high-volume sales, and measurable ROAS.", featured: true, href: "/services/performance-marketing" },
@@ -41,11 +43,36 @@ const ABOUT_PILLARS = [
 const AVENUE_PATH = "M40,470 C40,370 340,370 340,270 C340,170 40,170 40,70 C40,30 90,10 140,10";
 
 export default function Home() {
-  const [formStatus, setFormStatus] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedUrl, setSubmittedUrl] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [serviceOpen, setServiceOpen] = useState(false);
   const [selectedService, setSelectedService] = useState("");
   const [activeBrand, setActiveBrand] = useState(null);
   const selectRef = useRef(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errorMessage) {
+      setErrorMessage("");
+    }
+  };
+
+  const handleResetForm = () => {
+    setFormData({ name: "", email: "", phone: "", message: "" });
+    setSelectedService("");
+    setIsSubmitted(false);
+    setSubmittedUrl("");
+    setErrorMessage("");
+  };
 
   useEffect(() => {
     const revealEls = document.querySelectorAll(".reveal");
@@ -77,13 +104,29 @@ export default function Home() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!selectedService) {
-      setFormStatus("Please select a service you're interested in.");
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    const result = handleWhatsAppSubmit({
+      name: sanitizeInput(formData.name),
+      email: sanitizeInput(formData.email),
+      phone: sanitizeInput(formData.phone),
+      service: selectedService,
+      requireService: true,
+      message: sanitizeInput(formData.message),
+    });
+
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      setErrorMessage(result.error);
       return;
     }
-    setFormStatus("Thank you! Your message has been received. We will get back to you shortly.");
-    e.target.reset();
-    setSelectedService("");
+
+    setSubmittedUrl(result.url);
+    setIsSubmitted(true);
   };
 
   return (
@@ -351,19 +394,10 @@ export default function Home() {
               </div>
               <div>
                 <b>Call / WhatsApp</b>
-                <a href="https://wa.me/923144083350" target="_blank" rel="noreferrer">+92 (314) 4083350</a>
+                <a href={`https://wa.me/${WHATSAPP_CONFIG.phoneNumber}`} target="_blank" rel="noreferrer">{WHATSAPP_CONFIG.displayPhone}</a>
               </div>
             </div>
 
-            <div className="info-line">
-              <div className="icon">
-                <Icon name="mail" size={18} />
-              </div>
-              <div>
-                <b>Direct Email</b>
-                <a href="mailto:hello@sparkeavenue.com">hello@sparkeavenue.com</a>
-              </div>
-            </div>
 
             <div className="info-line">
               <div className="icon">
@@ -396,42 +430,189 @@ export default function Home() {
             </div>
           </div>
 
-          <form className="reveal contact-form-card" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <input type="text" placeholder="Your Full Name" required />
-              <input type="email" placeholder="Your Email Address" required />
-            </div>
-
-            <div className="custom-select" ref={selectRef}>
-              <button
-                type="button"
-                className={`select-trigger ${serviceOpen ? "open" : ""} ${!selectedService ? "placeholder" : ""}`}
-                onClick={() => setServiceOpen(!serviceOpen)}
-              >
-                {selectedService || "Select service you're interested in"}
-                <span className="select-caret">▾</span>
-              </button>
-              {serviceOpen && (
-                <div className="select-panel">
-                  {SERVICES.map((s) => (
-                    <div
-                      key={s.tag}
-                      className={`select-option ${selectedService === s.title ? "active" : ""}`}
-                      onClick={() => { setSelectedService(s.title); setServiceOpen(false); }}
-                    >
-                      {s.title}
-                    </div>
-                  ))}
+          <div className="reveal contact-form-card">
+            {isSubmitted ? (
+              <div style={{ textAlign: "center", padding: "10px 0" }}>
+                <div
+                  style={{
+                    width: "56px",
+                    height: "56px",
+                    borderRadius: "50%",
+                    background: "rgba(255,171,64,0.12)",
+                    border: "1.5px solid var(--spark)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    margin: "0 auto 20px",
+                    color: "var(--spark)",
+                    fontSize: "1.5rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  ✓
                 </div>
-              )}
-            </div>
 
-            <textarea rows={5} placeholder="Tell us about your brand, current goals, and project timeline" required />
-            <button type="submit" className="btn" style={{ justifyContent: "center", width: "100%" }}>
-              Send Inquiry Message →
-            </button>
-            {formStatus && <div className="form-status">{formStatus}</div>}
-          </form>
+                <h3
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1.5rem",
+                    color: "#fff",
+                    marginBottom: "12px",
+                  }}
+                >
+                  Thank You! Your Inquiry Has Been Sent
+                </h3>
+
+                <p
+                  style={{
+                    color: "var(--muted)",
+                    fontSize: "0.98rem",
+                    lineHeight: "1.7",
+                    maxWidth: "460px",
+                    margin: "0 auto 28px",
+                  }}
+                >
+                  WhatsApp has been opened with your pre-filled inquiry details. Our team will review your requirements and get back to you shortly.
+                </p>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "14px", alignItems: "center" }}>
+                  {submittedUrl && (
+                    <a
+                      href={submittedUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "100%",
+                        maxWidth: "340px",
+                      }}
+                    >
+                      Open WhatsApp Again →
+                    </a>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={handleResetForm}
+                    className="btn-outline"
+                    style={{
+                      width: "100%",
+                      maxWidth: "340px",
+                      justifyContent: "center",
+                      padding: "12px 20px",
+                      fontSize: "0.92rem",
+                    }}
+                  >
+                    Send Another Inquiry
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <div className="form-row">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Full Name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    maxLength={80}
+                    required
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email Address (Optional)"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    maxLength={100}
+                  />
+                </div>
+
+                <div className="form-row">
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone / WhatsApp Number"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    maxLength={30}
+                    required
+                  />
+                  <div className="custom-select" ref={selectRef}>
+                    <button
+                      type="button"
+                      className={`select-trigger ${serviceOpen ? "open" : ""} ${!selectedService ? "placeholder" : ""}`}
+                      onClick={() => setServiceOpen(!serviceOpen)}
+                    >
+                      {selectedService || "Select service you're interested in"}
+                      <span className="select-caret">▾</span>
+                    </button>
+                    {serviceOpen && (
+                      <div className="select-panel">
+                        {SERVICES.map((s) => (
+                          <div
+                            key={s.tag}
+                            className={`select-option ${selectedService === s.title ? "active" : ""}`}
+                            onClick={() => {
+                              setSelectedService(s.title);
+                              setServiceOpen(false);
+                              if (errorMessage) setErrorMessage("");
+                            }}
+                          >
+                            {s.title}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <textarea
+                  rows={5}
+                  name="message"
+                  placeholder="Tell us about your brand, current goals, and project timeline"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  maxLength={2000}
+                  required
+                />
+
+                {errorMessage && (
+                  <div
+                    style={{
+                      padding: "12px 16px",
+                      background: "rgba(255,107,107,0.08)",
+                      border: "1px solid rgba(255,107,107,0.3)",
+                      borderRadius: "10px",
+                      color: "#ff6b6b",
+                      fontSize: "0.88rem",
+                      lineHeight: "1.4",
+                    }}
+                  >
+                    ⚠️ {errorMessage}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="btn"
+                  disabled={isSubmitting}
+                  style={{
+                    justifyContent: "center",
+                    width: "100%",
+                    opacity: isSubmitting ? 0.7 : 1,
+                    cursor: isSubmitting ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {isSubmitting ? "Opening WhatsApp..." : "Send Inquiry via WhatsApp →"}
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </section>
 

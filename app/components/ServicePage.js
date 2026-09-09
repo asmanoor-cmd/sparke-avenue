@@ -68,6 +68,7 @@ export default function ServicePage({
   finalDescription,
   inquiryExtraLabel = "Service",
   inquiryExtraPlaceholder,
+  serviceName,
 }) {
   const [openFaq, setOpenFaq] = useState(null);
   const glowRef = useRef(null);
@@ -248,10 +249,14 @@ export default function ServicePage({
           <span className="eyebrow" style={{ justifyContent: "center" }}>FAQ</span>
           <h2 className="section-title">Common Questions</h2>
         </div>
-        <div className="faq-list">
+        <div className="faq-list reveal">
           {faqs.map((f, i) => (
-            <div className={`faq-item reveal ${openFaq === i ? "open" : ""}`} key={f.q}>
-              <button className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+            <div className={`faq-item ${openFaq === i ? "open" : ""}`} key={f.q}>
+              <button
+                type="button"
+                className="faq-q"
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              >
                 {f.q}
                 <span className="faq-caret">+</span>
               </button>
@@ -290,7 +295,11 @@ export default function ServicePage({
         {finalDescription && (
           <p style={{ color: "var(--muted)", maxWidth: 560, margin: "0 auto 40px" }}>{finalDescription}</p>
         )}
-        <InquiryForm extraLabel={inquiryExtraLabel} extraPlaceholder={inquiryExtraPlaceholder} />
+        <InquiryForm
+          serviceName={serviceName || eyebrow}
+          extraLabel={inquiryExtraLabel}
+          extraPlaceholder={inquiryExtraPlaceholder}
+        />
       </section>
 
       <SiteFooter />

@@ -206,7 +206,7 @@ export default function DigitalStrategyPage() {
         <p style={{ color: "var(--muted)", maxWidth: 560, margin: "0 auto 40px" }}>
           Tell us about your business, challenges and goals. We&apos;ll help shape the right digital direction.
         </p>
-        <InquiryForm extraLabel="Business Name" extraPlaceholder="Your Business Name" />
+        <InquiryForm serviceName="Digital Strategy" extraLabel="Business Name" extraPlaceholder="Your Business Name" />
       </section>
 
       <SiteFooter />

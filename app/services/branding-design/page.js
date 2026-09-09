@@ -199,7 +199,7 @@ export default function BrandingDesignPage() {
         <p style={{ color: "var(--muted)", maxWidth: 560, margin: "0 auto 40px" }}>
           Tell us your vision and let&apos;s create an identity that represents your business.
         </p>
-        <InquiryForm extraLabel="Business Name" extraPlaceholder="Your Business Name" />
+        <InquiryForm serviceName="Branding & Design" extraLabel="Business Name" extraPlaceholder="Your Business Name" />
       </section>
 
       <SiteFooter />
